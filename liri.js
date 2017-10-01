@@ -1,95 +1,87 @@
-// // switch statment
-
 // # LIRI Bot
 
 // ### Overview
 
-// In this assignment, you will make LIRI. LIRI is like iPhone's SIRI. However, while SIRI is a Speech Interpretation and Recognition Interface, LIRI is a _Language_ Interpretation and Recognition Interface. LIRI will be a command line node app that takes in parameters and gives you back data.
+// In this assignment, you will make LIRI. LIRI is like iPhone's SIRI. 
+// However, while SIRI is a Speech Interpretation and Recognition Interface, 
+// LIRI is a _Language_ Interpretation and Recognition Interface. 
+// LIRI will be a command line node app that takes in parameters and gives you back data.
 
-// ### Before You Begin
+// -------------------------------------------
 
-// 1. LIRI will display your latest tweets. As we do not want to display your personal account, or its keys, please make an alias account and add a few tweets to it!
+// Start!
 
-// 2. Make a new GitHub repository called liri-node-app and clone it to your computer.
+// import keys grabbing the data from keys.js and putting it into a variable
+var APIkeys = require("./keys.js");
 
-// 3. To retrieve the data that will power this app, you'll need to send requests to the Twitter, Spotify and OMDB APIs. You'll find these Node packages crucial for your assignment.
+// Twitter info
+//? var twitterKeys = require('twitter');
+ 
+var params = {screen_name: 'nodejs'};
+client.get('statuses/user_timeline', params, function(error, tweets, response) {
+  if (!error) {
+    console.log(tweets);
+  }
+});
 
-//    * [Twitter](https://www.npmjs.com/package/twitter)
-   
-//    * [Spotify](https://www.npmjs.com/package/node-spotify-api)
-   
-//    * [Request](https://www.npmjs.com/package/request)
-     
-//      * You'll use Request to grab data from the [OMDB API](http://www.omdbapi.com).
+// Spotify info
+// ? var spotifyKeys = require('node-spotify-api');
+ 
+spotify
+  .search({ type: 'track', query: 'All the Small Things' })
+  .then(function(response) {
+    console.log(response);
+  })
+  .catch(function(err) {
+    console.log(err);
+  });
 
-// ### Instructions
+  
 
-// 1. Initialize a `package.json` file at your project root. Be sure to save all of the npm packages you'll be using to this file. If you fail to initialize a `package.json` file and save your dependencies to it, it will be troublesome, and at times almost impossible for anyone else to run your code.
+  // loop for turning the user input into one string--is this needed?
 
-// 2. Make a .gitignore file and add the following lines to it. This will tell git not to track these files, and thus they won't be committed to Github.
+var userInput=process.argv; // use something else besides process.argv
 
-// ```
-// node_modules
-// .DS_Store
-// ```
+var userInfo;
 
-// 3. Make a JavaScript file named `keys.js`. **Do Not** add this file to the .gitignore. This would be a good thing to do in the real world, but it makes grading this assignment a challenge.
+for (var i = 2; i < userInput.length; i++) {
+	userInput.push(userInfo[i]);
+	}
 
-// Inside keys.js your file will look like this:
-
-// ```JavaScript
-// console.log('this is loaded');
-
-// var twitterKeys = {
-//   consumer_key: '<input here>',
-//   consumer_secret: '<input here>',
-//   access_token_key: '<input here>',
-//   access_token_secret: '<input here>',
-// }
-
-// module.exports = twitterKeys;
-// ```
-
-// 4. Get your Twitter API keys by following these steps:
-
-//    * Step One: Visit <https://apps.twitter.com/app/new>
-   
-//    * Step Two: Fill out the form with dummy data. Type `http://google.com` in the Website input. Don't fill out the Callback URL input. Then submit the form.
-   
-//    * Step Three: On the next screen, click the Keys and Access Tokens tab to get your consume key and secret. 
-     
-//      * Copy and paste them where the `<input here>` tags are inside your keys.js file.
-   
-//    * Step Four: At the bottom of the page, click the `Create my access token` button to get your access token key and secret. 
-     
-//      * Copy the access token key and secret displayed at the bottom of the next screen. Paste them where the `<input here>` tags are inside your keys.js file.
-
-// 5. Make a file called `random.txt`.
-
-//    * Inside of `random.txt` put the following in with no extra characters or white space:
-     
-//      * spotify-this-song,"I Want it That Way"
-
-// 6. Make a JavaScript file named `liri.js`.
-
-// 7. At the top of the `liri.js` file, write the code you need to grab the data from keys.js. Then store the keys in a variable.
-
-// 8. Make it so liri.js can take in one of the following commands:
-
-//    * `my-tweets`
+// create functions to be placed with each corresponding command
+ // switch statement:
+ 
+ //   * `my-tweets`
+        // function tweets()
 
 //    * `spotify-this-song`
+        // spotify()
 
 //    * `movie-this`
+        // movies()
 
-//    * `do-what-it-says`
+//    * `do-what-it-says` 
+        // autoFS()
 
-// ### What Each Command Should Do
+//    * defualt
+        // helper()
 
+// functions
+
+// functions have all of the console logging inside them, and basically everything that statement should produce
+// this makes the switch statement cleaner and easier to read, as well as organizes the code so that elements are easier to find
+// run defaults 
+
+
+// ---------TWITTER----------------------------------
 // 1. `node liri.js my-tweets`
 
 //    * This will show your last 20 tweets and when they were created at in your terminal/bash window.
+function tweets() {
 
+}
+
+// ----------SPOTIFY---------------------------------
 // 2. `node liri.js spotify-this-song '<song name here>'`
 
 //    * This will show the following information about the song in your terminal/bash window
@@ -116,6 +108,12 @@
 
 //    * Step Four: On the next screen, scroll down to where you see your client id and client secret. Copy these values down somewhere, you'll need them to use the Spotify API and the [node-spotify-api package](https://www.npmjs.com/package/node-spotify-api). See the 
 
+function spotify() {
+
+}
+
+
+// -----------OMDB--------------------------------
 // 3. `node liri.js movie-this '<movie name here>'`
 
 //    * This will output the following information to your terminal/bash window:
@@ -139,48 +137,24 @@
    
 //    * You'll use the request package to retrieve data from the OMDB API. Like all of the in-class activities, the OMDB API requires an API key. You may use `40e9cece`.
 
+function movies() {
+
+}
+
+// -----------FS--------------------------------
 // 4. `node liri.js do-what-it-says`
    
 //    * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
      
 //      * It should run `spotify-this-song` for "I Want it That Way," as follows the text in `random.txt`.
-     
-//      * Feel free to change the text in that document to test out the feature for other commands.
 
+function autoFS() {
 
+}
 
-// -------------------------------------------
+// ---------DEFAULTS/HELPER MESSAGES----------------------------------     
+//      * Feel free to change the text in that document to test out the feature for other commands. 
 
-// Start of Work
+function helper() {
 
-// Twitter
-var Twitter = require('twitter');
- 
-var params = {screen_name: 'nodejs'};
-client.get('statuses/user_timeline', params, function(error, tweets, response) {
-  if (!error) {
-    console.log(tweets);
-  }
-});
-
-// Spotify
-var Spotify = require('node-spotify-api');
- 
-spotify
-  .search({ type: 'track', query: 'All the Small Things' })
-  .then(function(response) {
-    console.log(response);
-  })
-  .catch(function(err) {
-    console.log(err);
-  });
-
-  // loop for turning the user input into one string
-
-var userInput=process.argv; // use something else besides process.argv
-
-var userInfo;
-
-for (var i = 2; i < userInput.length; i++) {
-	userInput.push(userInfo[i]);
-	}
+}

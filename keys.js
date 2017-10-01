@@ -11,9 +11,12 @@
 
 
 console.log('this is loaded');
+console.log(spotifyKeys);
 
+var Twitter = require("twitter");
+var Spotify = require("node-spotify-api");
 // Twitter Key
-var twitterKeys = ({
+var twitterKeys =  new Twitter ({
   consumer_key: '0ky6W3ODjvJQXo7fKiQYr83v8',
   consumer_secret: 'CMIc4zaGFJ7m4FdNIwV6TgV9JO3fVvMOy1z4yu09XSeOlEEE8f',
   access_token_key: '914110099119050753-hR6ngSldOjLomy3O6HTZBHwMwNRfhA5',
@@ -21,13 +24,12 @@ var twitterKeys = ({
 });
 
 // Spotify Key
-var spotifyKeys = ({
+var spotifyKeys = new Spotify ({
   id: '54ac54b73d374231a843b27e35f5c4f9',
   secret: 'e255fa51d1da43f880954b46e8442e2c'
 });
 
 // export keys for access in LIRI
-
 module.exports = {
 	twitterKeys: twitterKeys,
 	spotifyKeys: spotifyKeys

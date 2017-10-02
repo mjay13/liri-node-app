@@ -14,12 +14,14 @@
 // import keys grabbing the data from keys.js and putting it into a variable
 var APIkeys = require("./keys.js");
 
-console.log(APIkeys.twitterKeys);
+console.log(twitterKeys);
 // Incorporate the "request" npm package for OMDB
 var request = require("request");
 var Twitter = require("twitter");
 var Spotify = require("node-spotify-api");
-var userOperand = process.argv[2]; // something else
+var inquirer = require("inquirer"); // for prompt
+var userOperand = process.argv[2]; // the operator for deciding which function to use
+var userInput = process.argv[3];
 var fs = require("fs");
 
 
@@ -43,10 +45,28 @@ switch (userOperand) {
         tweets();
         break;
     case "spotify-this-song":
-        spotify();
+        
+// take out the if-else statements and put into a function, put the other function inside it.
+        if (userInput === undefined) {
+            // If no song is provided then your program will default to "The Sign" by Ace of Base
+            userInput = "The Sign by Ace of Base";
+            console.log("Undefined. Here is \'The Sign\' by Ace of Base instead. If you don\'t like that, then put in something else.");
+            // runs spotify function with the default user input
+            spotify();
+        } else {
+            spotify();
+        }
         break;
     case "movie-this":
+        if (userInput === undefined) {
+            // If no song is provided then your program will default to "The Sign" by Ace of Base
+            userInput = "Mr. Nobody";
+            console.log("Your input is undefined. Here is the film \'Mr. Nobody\'. If you haven't watched \'Mr. Nobody\', then you should: \n<http://www.imdb.com/title/tt0485947/> \n It's on Netflix! If you don\'t like that, then put in something else.");
+            // movie function with the default user input
+            movies();
+        } else {
         movies();
+      }
         break;
     case "do-what-it-says":
         autoFS();
@@ -70,7 +90,7 @@ function tweets() {
     // Twitter info
     //? var twitterKeys = require('twitter');
 
-    var account = { screen_name: 'megan_thedev' };
+    var account = { screen_name: 'megan_thedev', count: 3 };
 
     APIkeys.twitterKeys.get('statuses/user_timeline', account, function(error, tweets, response) {
         if (!error) {
@@ -85,7 +105,7 @@ function tweets() {
 
 function spotify() {
 
-    if (somthing) {
+    (somthing) {
         console.log("Artist(s): ");
         console.log("Song Name: ");
         console.log("Preview Link: ");
@@ -93,7 +113,7 @@ function spotify() {
 
     } else {
         // If no song is provided then your program will default to "The Sign" by Ace of Base
-        console.log("The Sign by Ace of Base");
+        console.log("The Sign by Ace of Base" + spotifydefaultinfo);
     }
 
 
@@ -131,7 +151,7 @@ function movies() {
     });
 
     // case entered title of movie, grab this info and display
-    if (userInput) {
+    
         console.log("Title: ");
         console.log("Release Year: ");
         console.log("IMBD Rating: ");
@@ -140,10 +160,8 @@ function movies() {
         console.log("Language: ");
         console.log("Plot: ");
         console.log("Actors: ");
-    } else {
-        // case nothing: Mr. Nobody info
-        console.log("If you haven't watched 'Mr. Nobody,'' then you should: \n<http://www.imdb.com/title/tt0485947/> \n It's on Netflix!");
-    }
+   
+   
 }
 
 // -----------FS--------------------------------
@@ -157,6 +175,8 @@ function movies() {
 function autoFS() {
     // take in the string from random.txt, apply it to spotify?
 
+
+    var randomData = "";
     // example from in-class activities
     fs.readFile("random.txt", "utf8", function(error, data) {
 
@@ -169,30 +189,24 @@ function autoFS() {
         console.log(data);
 
         // Then split it by commas (to make it more readable)
-        var randomData = data.split(", ");
+        randomData = data.split(", ");
 
         // Re-display the content as an array for later use.
         console.log(randomData);
 
     });
 
+    // put random data into spotify?
+    spotify(randomData[1]);
+
 }
 
 // ---------DEFAULTS/HELPER MESSAGES----------------------------------     
 
 function helper() {
-    console.log("Try one of these commands: \n"+
-      "my-tweets\n"+
-      "movie-this (followed by the movie's name) \n"+
-      "spotify-this-song (followed by the song name) \n"+
-      "do-what-it-says");
+    console.log("Try one of these commands: \n" +
+        "my-tweets\n" +
+        "movie-this (followed by the movie's name) \n" +
+        "spotify-this-song (followed by the song name) \n" +
+        "do-what-it-says");
 }
-
-
-
-
-
-
-
-
-

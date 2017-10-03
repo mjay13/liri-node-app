@@ -24,18 +24,35 @@ var Spotify = require("node-spotify-api");
 var inquirer = require("inquirer"); // for prompt
 var userOperand = process.argv[2]; // the operator for deciding which function to use
 var userInput = process.argv;
+var inputString = "";
 var fs = require("fs");
 
 // separate words will be made into a string
 // Capture all the words after the operand
-for (var i = 3; i < userInput.length; i++) {
-    // (ignoring the first three Node arguments)
-    // building a string
-    userInput.push(userInput[i]);
+// for (var i = 3; i < userInput.length; i++) {
+//     // (ignoring the first three Node arguments)
+//     // building a string
+//     userInput.push(userInput[i]);
 
+
+// Loop through all the words in the node argument
+// And do a little for-loop magic to handle the inclusion of "+"s
+function stringMaker() {
+    for (var i = 3; i < userInput.length; i++) {
+
+        if (i > 3 && i < userInput.length) {
+
+            inputString = inputString + "+" + userInput[i];
+
+        } else {
+
+            inputString += userInput[i];
+
+        }
+    }
 }
 
-
+stringMaker();
 // switch statement:
 switch (userOperand) {
     case "my-tweets":
@@ -43,22 +60,24 @@ switch (userOperand) {
         tweets();
         break;
     case "spotify-this-song":
-
+    case "song":
         // take out the if-else statements and put into a function, put the other function inside it.
-        if (userInput === undefined) {
+        if (inputString === undefined) {
             spotifyDefault();
         } else {
             spotify();
         }
         break;
     case "movie-this":
-        if (userInput === undefined) {
+    case "movie":
+        if (inputString === undefined) {
             movieDefault();
         } else {
             movies();
         }
         break;
     case "do-what-it-says":
+    case "whatever":
         autoFS();
         break;
     default:
@@ -99,62 +118,62 @@ function tweets() {
 
 
 
-// ######### I NEED HELP ##############
+// ######### WORKING ##############
 // ----------SPOTIFY---------------------------------
-// 2. `node liri.js spotify-this-song '<song name here>'`
+
 
 function spotify() {
 
-    if (something) {
-        console.log("Artist(s): ");
-        console.log("Song Name: ");
-        console.log("Preview Link: ");
-        console.log("Song Album: ");
+    var sKey = new Spotify(
+        APIkeys.spotifyKeys
+    );
 
-    } else {
-        // If no song is provided then your program will default to "The Sign" by Ace of Base
-        console.log("The Sign by Ace of Base" + spotifydefaultinfo);
-    }
+    sKey
+        .search({ type: 'track', query: inputString, limit: 1 },
+            function(err, data) {
 
+                if (err) {
+                    return console.log('Error occurred: ' + err);
+                }
 
-    // Spotify info
-    // ? var spotifyKeys = require('node-spotify-api');
+                var songData = data.tracks.items[0];
 
-    APIkeys.spotifyKeys
-        .search({ type: 'track', query: 'All the Small Things' })
-        .then(function(response) {
-            console.log(response);
-        })
-        .catch(function(err) {
-            console.log(err);
-        });
-
-
+                console.log("######### Your results for the song \'" + inputString + "\': ##########");
+                console.log("------------------------------------------------------");
+                console.log("Artist(s): " + songData.artists[0].name);
+                console.log("Song Name: " + songData.name);
+                console.log("Preview Link: " + songData.preview_url);
+                console.log("Song Album: " + songData.album.name);
+                console.log("------------------------------------------------------");
+                // console.log(songData);
+            });
 
 }
 
+// ######### I NEED HELP ##############
 function spotifyDefault() {
     // If no song is provided then your program will default to "The Sign" by Ace of Base
-    userInput = "The Sign by Ace of Base";
+    inputString = "The Sign by Ace of Base";
     console.log("Undefined. Here is \'The Sign\' by Ace of Base instead. If you don\'t like that, then put in something else.");
     // runs spotify function with the default user input
     spotify();
 }
 
-
+// ######### I NEED HELP ##############
 // -----------OMDB-------------------------------- 
 //    API key `40e9cece`.
 function movies() {
-
+    var call = "http://www.omdbapi.com/?t=" + inputString + "&y=&plot=short&apikey=40e9cece";
     // example from docs
     // OMDB API request
-    request("http://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
+    request(call, function(error, response, body) {
 
         // If there were no errors and the response code was 200 (i.e. the request was successful)...
         if (!error && response.statusCode === 200) {
 
             var mText = JSON.parse(body);
 
+            console.log("------------------------------------------------------");
             console.log("Title: " + mText.Title);
             console.log("Release Year: " + mText.Year);
             console.log("IMBD Rating: " + mText.imdbRating);
@@ -163,21 +182,22 @@ function movies() {
             console.log("Language: " + mText.Language);
             console.log("Plot: " + mText.Plot);
             console.log("Actors: " + mText.Actors);
+            console.log("------------------------------------------------------");
+
         }
     });
 
-    // case entered title of movie, grab this info and display
 
-
-    //console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
+    //RYAN--console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
 
 
 
 }
 
+// ######### WORKING ##############
 function movieDefault() {
-    // If no song is provided then your program will default to "The Sign" by Ace of Base
-    userInput = "Mr. Nobody";
+    // If no movie is provided, then Mr. Nobody is
+    inputString = "Mr. Nobody";
     console.log("Your input is undefined. Here is the film \'Mr. Nobody\'. If you haven't watched \'Mr. Nobody\', then you should: \n<http://www.imdb.com/title/tt0485947/> \n It's on Netflix! If you don\'t like that, then put in something else.");
     // movie function with the default user input
     movies();
@@ -191,6 +211,7 @@ function movieDefault() {
 //      * It should run `spotify-this-song` for "I Want it That Way," as follows the text in `random.txt`.
 //      * Feel free to change the text in that document to test out the feature for other commands.
 
+// ######### I NEED HELP ##############
 function autoFS() {
     // take in the string from random.txt, apply it to spotify?
 
@@ -216,11 +237,11 @@ function autoFS() {
     });
 
     // put random data into spotify?
-    spotify(randomData[1]);
+    spotify(randomData);
 
 }
 
-// ######### WORKING##############
+// ######### WORKING ##############
 // ---------DEFAULTS/HELPER MESSAGES----------------------------------     
 
 function helper() {

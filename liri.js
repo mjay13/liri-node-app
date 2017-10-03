@@ -71,7 +71,12 @@ switch (userOperand) {
     case "movie-this":
     case "movie":
         if (inputString === undefined) {
-            movieDefault();
+            //movieDefault();
+            // If no movie is provided, then Mr. Nobody is
+            //inputString = "Mr. Nobody";
+            console.log("Your input is undefined. Here is the film \'Mr. Nobody\'. If you haven't watched \'Mr. Nobody\', then you should: \n<http://www.imdb.com/title/tt0485947/> \n It's on Netflix! If you don\'t like that, then put in something else.");
+            // movie function with the default user input
+            //movies();
         } else {
             movies();
         }
@@ -92,12 +97,9 @@ switch (userOperand) {
 
 // ######### WORKING ##############
 // ---------TWITTER----------------------------------
-// 1. `node liri.js my-tweets`
 
-//    * This will show your last 20 tweets and when they were created at in your terminal/bash window.
 function tweets() {
-    // Twitter info
-    //? var twitterKeys = require('twitter');
+
     var tKeys = new Twitter(
         APIkeys.twitterKeys
     );
@@ -116,11 +118,8 @@ function tweets() {
 
 }
 
-
-
 // ######### WORKING ##############
 // ----------SPOTIFY---------------------------------
-
 
 function spotify() {
 
@@ -159,7 +158,7 @@ function spotifyDefault() {
     spotify();
 }
 
-// ######### I NEED HELP ##############
+// ######### I WORK! ##############
 // -----------OMDB-------------------------------- 
 //    API key `40e9cece`.
 function movies() {
@@ -194,7 +193,7 @@ function movies() {
 
 }
 
-// ######### WORKING ##############
+// ######### NEEDS HELP ##############
 function movieDefault() {
     // If no movie is provided, then Mr. Nobody is
     inputString = "Mr. Nobody";
@@ -215,7 +214,7 @@ function movieDefault() {
 function autoFS() {
     // take in the string from random.txt, apply it to spotify?
 
-
+    //console.log("logging autoFS")
     var randomData = "";
     // example from in-class activities
     fs.readFile("random.txt", "utf8", function(error, data) {
@@ -226,22 +225,27 @@ function autoFS() {
         }
 
         // We will then print the contents of data
-        console.log(data);
+        //console.log(data);
 
         // Then split it by commas (to make it more readable)
         randomData = data.split(", ");
 
         // Re-display the content as an array for later use.
-        console.log(randomData);
+        //console.log(randomData);
+
+        inputString = randomData[1];
+        //console.log(inputString);
+
+        spotify();
 
     });
 
     // put random data into spotify?
-    spotify(randomData);
+    //spotify(randomData);
 
 }
 
-// ######### WORKING ##############
+// ######### WORKING! ##############
 // ---------DEFAULTS/HELPER MESSAGES----------------------------------     
 
 function helper() {

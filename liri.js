@@ -14,59 +14,49 @@
 // import keys grabbing the data from keys.js and putting it into a variable
 var APIkeys = require("./keys.js");
 
-console.log(twitterKeys);
+//console.log(APIkeys.twitterKeys);
+
+
 // Incorporate the "request" npm package for OMDB
 var request = require("request");
 var Twitter = require("twitter");
 var Spotify = require("node-spotify-api");
 var inquirer = require("inquirer"); // for prompt
 var userOperand = process.argv[2]; // the operator for deciding which function to use
-var userInput = process.argv[3];
+var userInput = process.argv;
 var fs = require("fs");
 
+// separate words will be made into a string
+// Capture all the words after the operand
+for (var i = 3; i < userInput.length; i++) {
+    // (ignoring the first three Node arguments)
+    // building a string
+    userInput.push(userInput[i]);
 
+}
 
-// loop for turning the user input into one string--is this needed?
-
-// var userInput=process.argv; // use something else besides process.argv
-
-// var userInfo;
-
-// for (var i = 2; i < userInput.length; i++) {
-//  userInput.push(userInfo[i]);
-//  }
-
-// create functions to be placed with each corresponding command
 
 // switch statement:
-// put this whole thing in a prompt? the switch would be at the end of a promise?
 switch (userOperand) {
     case "my-tweets":
+    case "tweets":
         tweets();
         break;
     case "spotify-this-song":
-        
-// take out the if-else statements and put into a function, put the other function inside it.
+
+        // take out the if-else statements and put into a function, put the other function inside it.
         if (userInput === undefined) {
-            // If no song is provided then your program will default to "The Sign" by Ace of Base
-            userInput = "The Sign by Ace of Base";
-            console.log("Undefined. Here is \'The Sign\' by Ace of Base instead. If you don\'t like that, then put in something else.");
-            // runs spotify function with the default user input
-            spotify();
+            spotifyDefault();
         } else {
             spotify();
         }
         break;
     case "movie-this":
         if (userInput === undefined) {
-            // If no song is provided then your program will default to "The Sign" by Ace of Base
-            userInput = "Mr. Nobody";
-            console.log("Your input is undefined. Here is the film \'Mr. Nobody\'. If you haven't watched \'Mr. Nobody\', then you should: \n<http://www.imdb.com/title/tt0485947/> \n It's on Netflix! If you don\'t like that, then put in something else.");
-            // movie function with the default user input
-            movies();
+            movieDefault();
         } else {
-        movies();
-      }
+            movies();
+        }
         break;
     case "do-what-it-says":
         autoFS();
@@ -81,7 +71,7 @@ switch (userOperand) {
 // this makes the switch statement cleaner and easier to read, as well as organizes the code so that elements are easier to find
 // run defaults 
 
-
+// ######### WORKING ##############
 // ---------TWITTER----------------------------------
 // 1. `node liri.js my-tweets`
 
@@ -89,23 +79,33 @@ switch (userOperand) {
 function tweets() {
     // Twitter info
     //? var twitterKeys = require('twitter');
+    var tKeys = new Twitter(
+        APIkeys.twitterKeys
+    );
 
-    var account = { screen_name: 'megan_thedev', count: 3 };
+    var account = { screen_name: 'megan_thedev', count: 20 };
 
-    APIkeys.twitterKeys.get('statuses/user_timeline', account, function(error, tweets, response) {
-        if (!error) {
+    tKeys.get('statuses/user_timeline', account, function(error, tweets, response) {
+        if (error) {
             console.log(tweets);
         }
+        for (var i = 0; i < tweets.length; i++) {
+            console.log(tweets[i].text);
+        }
+        console.log("------------------------------------------------------");
     });
 
 }
 
+
+
+// ######### I NEED HELP ##############
 // ----------SPOTIFY---------------------------------
 // 2. `node liri.js spotify-this-song '<song name here>'`
 
 function spotify() {
 
-    (somthing) {
+    if (something) {
         console.log("Artist(s): ");
         console.log("Song Name: ");
         console.log("Preview Link: ");
@@ -133,35 +133,54 @@ function spotify() {
 
 }
 
+function spotifyDefault() {
+    // If no song is provided then your program will default to "The Sign" by Ace of Base
+    userInput = "The Sign by Ace of Base";
+    console.log("Undefined. Here is \'The Sign\' by Ace of Base instead. If you don\'t like that, then put in something else.");
+    // runs spotify function with the default user input
+    spotify();
+}
+
 
 // -----------OMDB-------------------------------- 
-//    Like all of the in-class activities, the OMDB API requires an API key. You may use `40e9cece`.
+//    API key `40e9cece`.
 function movies() {
 
     // example from docs
     // OMDB API request
-    request("http://www.omdbapi.com/?t=remember+the+titans&y=&plot=short&apikey=40e9cece", function(error, response, body) {
+    request("http://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
 
         // If there were no errors and the response code was 200 (i.e. the request was successful)...
         if (!error && response.statusCode === 200) {
 
-            // Print out the imdbRating
-            console.log("The movie's rating is: " + JSON.parse(body).imdbRating);
+            var mText = JSON.parse(body);
+
+            console.log("Title: " + mText.Title);
+            console.log("Release Year: " + mText.Year);
+            console.log("IMBD Rating: " + mText.imdbRating);
+            console.log("Rotten Tomatoes Rating: " + mText.Ratings[1].Value);
+            console.log("Country of Production: " + mText.Country);
+            console.log("Language: " + mText.Language);
+            console.log("Plot: " + mText.Plot);
+            console.log("Actors: " + mText.Actors);
         }
     });
 
     // case entered title of movie, grab this info and display
-    
-        console.log("Title: ");
-        console.log("Release Year: ");
-        console.log("IMBD Rating: ");
-        console.log("Rotten Tomatoes Rating: ");
-        console.log("Country of Production: ");
-        console.log("Language: ");
-        console.log("Plot: ");
-        console.log("Actors: ");
-   
-   
+
+
+    //console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
+
+
+
+}
+
+function movieDefault() {
+    // If no song is provided then your program will default to "The Sign" by Ace of Base
+    userInput = "Mr. Nobody";
+    console.log("Your input is undefined. Here is the film \'Mr. Nobody\'. If you haven't watched \'Mr. Nobody\', then you should: \n<http://www.imdb.com/title/tt0485947/> \n It's on Netflix! If you don\'t like that, then put in something else.");
+    // movie function with the default user input
+    movies();
 }
 
 // -----------FS--------------------------------
@@ -201,6 +220,7 @@ function autoFS() {
 
 }
 
+// ######### WORKING##############
 // ---------DEFAULTS/HELPER MESSAGES----------------------------------     
 
 function helper() {

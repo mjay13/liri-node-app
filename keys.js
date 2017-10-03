@@ -2,9 +2,9 @@
 // uses exports.theobject so that the variable can be called directly
 
 
-console.log('this is loaded');
-console.log(exports.twitterKeys);
-console.log(exports.spotifyKeys);
+//console.log('this is loaded');
+//console.log(twitterKeys);
+//console.log(spotifyKeys);
 
 // Twitter Key
 exports.twitterKeys = {

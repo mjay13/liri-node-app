@@ -34,15 +34,17 @@ switch (userOperand) {
         break;
     case "spotify-this-song":
     case "song":
-        if (inputString === undefined) {
+        if (inputString === undefined || inputString === "") {
+            //console.log("no string");
             spotifyDefault();
         } else {
             spotify();
+            //console.log("searching for song");
         }
         break;
     case "movie-this":
     case "movie":
-        if (inputString === undefined) {
+        if (inputString === undefined || inputString === "") {
             movieDefault();
             // If no movie is provided, then Mr. Nobody is
             //inputString = "Mr. Nobody";
@@ -79,6 +81,7 @@ function stringMaker() {
 
         }
     }
+    //console.log("stringMaker done" + (typeof inputString));
 }
 
 // ######### WORKING ##############
@@ -109,7 +112,7 @@ function tweets() {
 // ----------SPOTIFY---------------------------------
 
 function spotify() {
-
+  console.log("error" +inputString+ "#");
     var sKey = new Spotify(
         APIkeys.spotifyKeys
     );
@@ -133,6 +136,7 @@ function spotify() {
                 console.log("------------------------------------------------------");
                 // console.log(songData);
             });
+
 
 }
 

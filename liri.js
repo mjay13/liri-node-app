@@ -1,4 +1,6 @@
-// # LIRI Bot
+// -------------------------------------------
+//     ######### LIRI BOT ##############
+// -------------------------------------------
 
 // ### Overview
 
@@ -8,17 +10,11 @@
 // LIRI will be a command line node app that takes in parameters and gives you back data.
 
 // -------------------------------------------
+//     ######### START! ##############
+// -------------------------------------------
 
-// Start!
-
-// import keys grabbing the data from keys.js and putting it into a variable
-var APIkeys = require("./keys.js");
-
-//console.log(APIkeys.twitterKeys);
-
-
-// Incorporate the "request" npm package for OMDB
-var request = require("request");
+var APIkeys = require("./keys.js"); // import keys grabbing the data from keys.js and putting it into a variable
+var request = require("request"); // for omdb
 var Twitter = require("twitter");
 var Spotify = require("node-spotify-api");
 var inquirer = require("inquirer"); // for prompt
@@ -27,32 +23,9 @@ var userInput = process.argv;
 var inputString = "";
 var fs = require("fs");
 
-// separate words will be made into a string
-// Capture all the words after the operand
-// for (var i = 3; i < userInput.length; i++) {
-//     // (ignoring the first three Node arguments)
-//     // building a string
-//     userInput.push(userInput[i]);
-
-
-// Loop through all the words in the node argument
-// And do a little for-loop magic to handle the inclusion of "+"s
-function stringMaker() {
-    for (var i = 3; i < userInput.length; i++) {
-
-        if (i > 3 && i < userInput.length) {
-
-            inputString = inputString + "+" + userInput[i];
-
-        } else {
-
-            inputString += userInput[i];
-
-        }
-    }
-}
 
 stringMaker();
+
 // switch statement:
 switch (userOperand) {
     case "my-tweets":
@@ -61,7 +34,6 @@ switch (userOperand) {
         break;
     case "spotify-this-song":
     case "song":
-        // take out the if-else statements and put into a function, put the other function inside it.
         if (inputString === undefined) {
             spotifyDefault();
         } else {
@@ -71,10 +43,10 @@ switch (userOperand) {
     case "movie-this":
     case "movie":
         if (inputString === undefined) {
-            //movieDefault();
+            movieDefault();
             // If no movie is provided, then Mr. Nobody is
             //inputString = "Mr. Nobody";
-            console.log("Your input is undefined. Here is the film \'Mr. Nobody\'. If you haven't watched \'Mr. Nobody\', then you should: \n<http://www.imdb.com/title/tt0485947/> \n It's on Netflix! If you don\'t like that, then put in something else.");
+            //console.log("Your input is undefined. Here is the film \'Mr. Nobody\'. If you haven't watched \'Mr. Nobody\', then you should: \n<http://www.imdb.com/title/tt0485947/> \n It's on Netflix! If you don\'t like that, then put in something else.");
             // movie function with the default user input
             //movies();
         } else {
@@ -89,11 +61,25 @@ switch (userOperand) {
         helper();
 }
 
-// functions
+// -------------------------------------------
+//     ######### FUNCTIONS ##############
+// -------------------------------------------
 
-// functions have all of the console logging inside them, and basically everything that statement should produce
-// this makes the switch statement cleaner and easier to read, as well as organizes the code so that elements are easier to find
-// run defaults 
+// Loop through all the words in the node argument to make it into a string
+function stringMaker() {
+    for (var i = 3; i < userInput.length; i++) {
+
+        if (i > 3 && i < userInput.length) {
+
+            inputString = inputString + "+" + userInput[i];
+
+        } else {
+
+            inputString += userInput[i];
+
+        }
+    }
+}
 
 // ######### WORKING ##############
 // ---------TWITTER----------------------------------
@@ -117,6 +103,7 @@ function tweets() {
     });
 
 }
+
 
 // ######### WORKING ##############
 // ----------SPOTIFY---------------------------------
@@ -149,7 +136,8 @@ function spotify() {
 
 }
 
-// ######### I NEED HELP ##############
+// ######### not working ##############
+
 function spotifyDefault() {
     // If no song is provided then your program will default to "The Sign" by Ace of Base
     inputString = "The Sign by Ace of Base";
@@ -158,16 +146,15 @@ function spotifyDefault() {
     spotify();
 }
 
+
 // ######### I WORK! ##############
 // -----------OMDB-------------------------------- 
-//    API key `40e9cece`.
+
 function movies() {
     var call = "http://www.omdbapi.com/?t=" + inputString + "&y=&plot=short&apikey=40e9cece";
-    // example from docs
-    // OMDB API request
+
     request(call, function(error, response, body) {
 
-        // If there were no errors and the response code was 200 (i.e. the request was successful)...
         if (!error && response.statusCode === 200) {
 
             var mText = JSON.parse(body);
@@ -186,14 +173,9 @@ function movies() {
         }
     });
 
-
-    //RYAN--console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
-
-
-
 }
 
-// ######### NEEDS HELP ##############
+// ######### not working ##############
 function movieDefault() {
     // If no movie is provided, then Mr. Nobody is
     inputString = "Mr. Nobody";
@@ -203,34 +185,22 @@ function movieDefault() {
 }
 
 // -----------FS--------------------------------
-// 4. `node liri.js do-what-it-says`
+// ######### WORKING ##############
 
-//    * Using the `fs` Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
-
-//      * It should run `spotify-this-song` for "I Want it That Way," as follows the text in `random.txt`.
-//      * Feel free to change the text in that document to test out the feature for other commands.
-
-// ######### I NEED HELP ##############
 function autoFS() {
-    // take in the string from random.txt, apply it to spotify?
+    
+    // take in the string from random.txt, apply it to spotify
 
-    //console.log("logging autoFS")
     var randomData = "";
-    // example from in-class activities
-    fs.readFile("random.txt", "utf8", function(error, data) {
+  
+    fs.readFile("random.txt", "utf8", function(err, data) {
 
         // If the code experiences any errors it will log the error to the console.
-        if (error) {
-            return console.log(error);
+        if (err) {
+            return console.log(err);
         }
 
-        // We will then print the contents of data
-        //console.log(data);
-
-        // Then split it by commas (to make it more readable)
-        randomData = data.split(", ");
-
-        // Re-display the content as an array for later use.
+        randomData = data.split(",");
         //console.log(randomData);
 
         inputString = randomData[1];
@@ -240,18 +210,17 @@ function autoFS() {
 
     });
 
-    // put random data into spotify?
-    //spotify(randomData);
-
 }
 
-// ######### WORKING! ##############
+// ######### WORKING ##############
 // ---------DEFAULTS/HELPER MESSAGES----------------------------------     
 
 function helper() {
+    console.log("------------------------------------------------------");
     console.log("Try one of these commands: \n" +
         "my-tweets\n" +
         "movie-this (followed by the movie's name) \n" +
         "spotify-this-song (followed by the song name) \n" +
         "do-what-it-says");
+    console.log("------------------------------------------------------");
 }
